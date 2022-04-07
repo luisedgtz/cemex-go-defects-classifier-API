@@ -19,8 +19,11 @@
   },
   "homepage": "https://github.com/luisedgtz/cemex-go-defects-classifier-API#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.9"
   },
   "devDependencies": {
