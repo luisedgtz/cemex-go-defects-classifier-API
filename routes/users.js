@@ -59,7 +59,7 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     try {
-        //Get user input
+        // Get user input
         const { email, password } = req.body;
 
         //Validate user input
