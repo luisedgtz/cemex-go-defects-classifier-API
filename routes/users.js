@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("../model/user");
+const Report = require("../model/report");
 
 const auth = require("../middleware/auth");
 
@@ -94,6 +95,66 @@ router.post("/login", async (req, res) => {
     }
 });
 
+router.get("/all", async (req, res) => {
+    try {
+        //Search with empty filter to return all reports
+        const users = await User.find({});
+
+        res.status(200).json(users);
+
+    } catch (e) {
+        console.log(e);
+        res.status(500).send("Invalid Credentials");
+    }
+});
+
+router.get("/reports", async (req, res) => {
+    try {
+        // Get input
+        const { user } = req.body;
+
+        // Validate user input
+        if (!(user)) {
+            res.status(400).send("All input is required");
+        }
+
+        const reportsByUser = await Report.find({
+            createdBy: user
+        }); 
+            
+        res.status(200).json(reportsByUser);
+
+    } catch (e) {
+        console.log(e);
+        res.status(500).send("Invalid Credentials");
+    }
+});
+
+router.get("/reportsByDate", async (req, res) => {
+    try {
+        // Get input
+        const { user, minDate, maxDate } = req.body;
+
+        // Validate user input
+        if (!(user && minDate && maxDate)) {
+            res.status(400).send("All input is required");
+        }
+
+        const reportsByUserDate = await Report.find({
+            createdBy: user,
+            createdAt: {
+                $gt: new Date(minDate),
+                $lt: new Date(maxDate)
+            }
+        }); 
+            
+        res.status(200).json(reportsByUserDate);
+
+    } catch (e) {
+        console.log(e);
+        res.status(500).send("Invalid Credentials");
+    }
+});
 
 
 module.exports = router
