@@ -5,6 +5,11 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const path = require('path');
+const scriptFilename = path.join('../s', 'scripts', 'process.py');
+
+const {spawn} = require('child_process')
+
 const Report = require("../model/report");
 
 const auth = require("../middleware/auth");
@@ -79,6 +84,26 @@ router.get("/byDate", async (req, res) => {
         console.log(e)
         res.status(500).send("Something went wrong");
     }
+});
+
+router.get('/script', (req, res) => {
+ 
+    var dataToSend;
+    // spawn new child process to call the python script
+    const python = spawn('python', ['./scripts/process.py', [1,2,3]]);
+    // collect data from script
+    python.stdout.on('data', function (data) {
+        console.log('Pipe data from python script ...');
+        dataToSend = data.toString();
+    });
+
+    // in close event we are sure that stream from child process is closed
+    python.on('close', (code) => {
+        console.log(`child process close all stdio with code ${code}`);
+        // send data to browser
+        res.send(dataToSend)
+    });
+    
 });
 
 module.exports = router

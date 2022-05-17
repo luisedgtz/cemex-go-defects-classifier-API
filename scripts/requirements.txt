@@ -1,0 +1,4 @@
+numpy==1.21.4
+keybert==0.5.1
+sklearn==0.0
+sklearn-pandas==2.2.0
