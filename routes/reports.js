@@ -92,7 +92,8 @@ router.get('/script', (req, res) => {
     let dummyData = ["Client was not able to see button", "Connection error resulted in crash", "Error while uploading a file", "Button did not appear correctly", "Server side froze due to error"]
 
     // spawn new child process to call the python script
-    const python = spawn('python3', ['./scripts/process.py', [1,2,3]]);
+    //make the second parameter be the data array sent in the req body
+    const python = spawn('python3', ['./scripts/process.py', JSON.stringify(dummyData)]);
     
     // collect data from script
     python.stdout.on('data', function (data) {

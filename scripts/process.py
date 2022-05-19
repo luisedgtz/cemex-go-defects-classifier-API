@@ -1,5 +1,6 @@
 import sys
 import re
+import json
 from keybert import KeyBERT
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -24,11 +25,8 @@ def get_model_prediction(arr):
 
   return keyword_array
 
-
-defects_string_array = ["Client was not able to see button", "Connection error resulted in crash", "Error while uploading a file", "Button did not appear correctly", "Server side froze due to error"]
-
+defects_string_array = json.loads(sys.argv[1])
 defects_keyword_array = get_model_prediction(defects_string_array)
-
 
 vectorizer = TfidfVectorizer(stop_words="english", ngram_range = (1,3))
 X = vectorizer.fit_transform(defects_keyword_array)

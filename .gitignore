@@ -5,3 +5,6 @@ node_modules/
 .env
 .env.test
 .env.production
+
+# vim swap files
+*.swp
