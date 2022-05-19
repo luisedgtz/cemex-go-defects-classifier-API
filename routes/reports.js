@@ -88,9 +88,12 @@ router.get("/byDate", async (req, res) => {
 
 router.get('/script', (req, res) => {
  
-    var dataToSend;
+    let dataToSend;
+    let dummyData = ["Client was not able to see button", "Connection error resulted in crash", "Error while uploading a file", "Button did not appear correctly", "Server side froze due to error"]
+
     // spawn new child process to call the python script
-    const python = spawn('python', ['./scripts/process.py', [1,2,3]]);
+    const python = spawn('python3', ['./scripts/process.py', [1,2,3]]);
+    
     // collect data from script
     python.stdout.on('data', function (data) {
         console.log('Pipe data from python script ...');
