@@ -36,7 +36,11 @@ model.fit(X)
 
 yhat = model.predict(X)
 
-res = [{'defect_string': y, 'defect_group': yhat[x]} for x,y in enumerate(defects_string_array)] 
+# cambiar esto para que sea el numero de grupos enviados en el req.body
+res = [ [] for x in range(2)]
 
+# appendea la string del defecto a la row descrita por index
+for index, element in enumerate(defects_string_array):
+  res[yhat[index]].append(element)
 
 print(res)
