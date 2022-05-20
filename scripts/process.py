@@ -25,22 +25,23 @@ def get_model_prediction(arr):
 
   return keyword_array
 
+# spawn arguments are sent as strings, they must be parsed first
 defects_string_array = json.loads(sys.argv[1])
+clusters_number = int(sys.argv[2])
+
 defects_keyword_array = get_model_prediction(defects_string_array)
 
 vectorizer = TfidfVectorizer(stop_words="english", ngram_range = (1,3))
 X = vectorizer.fit_transform(defects_keyword_array)
-true_k = 2
-model = KMeans(init = 'k-means++', n_clusters = 2, n_init = 10)
+model = KMeans(init = 'k-means++', n_clusters = clusters_number, n_init = 10)
 model.fit(X)
 
-yhat = model.predict(X)
+groups_array = model.predict(X)
 
-# cambiar esto para que sea el numero de grupos enviados en el req.body
-res = [ [] for x in range(2)]
+res = [[] for x in range(clusters_number)]
 
 # appendea la string del defecto a la row descrita por index
 for index, element in enumerate(defects_string_array):
-  res[yhat[index]].append(element)
+  res[groups_array[index]].append(element)
 
 print(res)
