@@ -92,7 +92,9 @@ router.get('/script', (req, res) => {
 
     // spawn new child process to call the python script
     //make the second parameter be the data array sent in the req body
-    const python = spawn('python3', ['./scripts/process.py', JSON.stringify(defects_array), cluster_number]);
+
+    const python = spawn('python', ['./scripts/process.py', JSON.stringify(req.body)]);
+
     
     // collect data from script
     python.stdout.on('data', function (data) {

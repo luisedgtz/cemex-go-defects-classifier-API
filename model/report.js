@@ -7,7 +7,17 @@ const reportSchema = new mongoose.Schema({
     createdBy: {type: String, default: null},
     department: {type: String, default: null},
     numGroups: {type: Number, default: 0},
-    labels: {type: [String]},
+    labels: {type: [String], default: null},
+    groups: {type: [[String]], default: null}
 })
 
 module.exports = mongoose.model("report", reportSchema, 'Reports');
+
+/*
+[ 
+    ["Defect 1", "Defect 2"] , 
+    ["Defect 3", "Defect 4"] ,
+    ["Defect 5", "Defect 6"] , 
+    ["Defect 7", "Defect 8"]
+]
+*/
