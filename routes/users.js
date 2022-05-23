@@ -9,6 +9,8 @@ const User = require("../model/user");
 const Report = require("../model/report");
 
 const auth = require("../middleware/auth");
+const config = process.env;
+
 
 router.post("/register", async (req, res) => {
     try {
@@ -92,6 +94,27 @@ router.post("/login", async (req, res) => {
         }
     } catch (e) {
         console.log(e)
+    }
+});
+
+router.get("/getuserbytoken", auth, async (req, res) => {
+    try {
+        const decoded_user = jwt.verify(req.query.token, config.TOKEN_KEY);
+        const user = await User.findOne({ email: decoded_user.email});
+
+        if(!user){
+            res.status(404).end(`user does not exist in this dojo`);
+        }
+        else{
+            res.status(200).json(user);
+        }
+    } catch (error) {
+        console.error("findUser error", error);
+        
+        return res.status(500).json({
+            error: true,
+            message: error.message,
+        });
     }
 });
 
