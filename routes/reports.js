@@ -86,14 +86,19 @@ router.get("/byDate", async (req, res) => {
     }
 });
 
-router.get('/script', (req, res) => {
-    const { cluster_number, defects_array } = req.body 
+router.post('/script', (req, res) => {
+    const { defects_array } = req.body.defects_array
+
     let dataToSend;
+
+    //console.log( req.body.defects_array)
+
 
     // spawn new child process to call the python script
     //make the second parameter be the data array sent in the req body
 
-    const python = spawn('python', ['./scripts/process.py', JSON.stringify(req.body)]);
+    const python = spawn('python', ['./scripts/process.py', JSON.stringify(req.body.defects_array)]);
+
 
     
     // collect data from script

@@ -8,12 +8,15 @@ const app = express();
 const usersRoutes = require("./routes/users")
 const reportsRoutes = require("./routes/reports")
 
-app.use(bp.json())
-app.use(bp.urlencoded({ extended: true }))
+app.use(bp.json({limit: '50mb' }))
+app.use(bp.urlencoded({ extended: true, limit: '50mb' }))
 app.use(cors())
 
 app.use("/users", usersRoutes);
 app.use("/reports", reportsRoutes)
+
+
+
 
 //Ping route to check status of server
 app.get("/ping", (req, res) => {

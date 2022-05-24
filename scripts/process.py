@@ -27,7 +27,7 @@ def get_model_prediction(arr):
 
 # spawn arguments are sent as strings, they must be parsed first
 defects_string_array = json.loads(sys.argv[1])
-clusters_number = int(sys.argv[2])
+clusters_number = 10
 
 defects_keyword_array = get_model_prediction(defects_string_array)
 
