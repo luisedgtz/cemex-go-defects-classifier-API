@@ -1,3 +1,5 @@
+const axios = require("axios")
+
 require("dotenv").config();
 //require("../config/database").connect();
 const express = require("express");
@@ -86,10 +88,17 @@ router.get("/byDate", async (req, res) => {
     }
 });
 
-router.post('/script', (req, res) => {
-    const { defects_array } = req.body.defects_array
-
-    let dataToSend;
+router.post('/script', async (req, res) => {
+    const { defects_array } = req.body
+    try {
+        const response = await axios.post('http://127.0.0.1:5000/classify', {
+            "defects_array": defects_array
+        })
+        console.log(response.data.length)
+    } catch(error) {
+        console.log(error)
+    }
+    // let dataToSend;
 
     //console.log( req.body.defects_array)
 
@@ -97,22 +106,22 @@ router.post('/script', (req, res) => {
     // spawn new child process to call the python script
     //make the second parameter be the data array sent in the req body
 
-    const python = spawn('python', ['./scripts/process.py', JSON.stringify(req.body.defects_array)]);
+    // const python = spawn('python', ['./scripts/process.py', JSON.stringify(req.body.defects_array)]);
 
 
     
-    // collect data from script
-    python.stdout.on('data', function (data) {
-        console.log('Pipe data from python script ...');
-        dataToSend = data.toString();
-    });
+    // // collect data from script
+    // python.stdout.on('data', function (data) {
+    //     console.log('Pipe data from python script ...');
+    //     dataToSend = data.toString();
+    // });
 
-    // in close event we are sure that stream from child process is closed
-    python.on('close', (code) => {
-        console.log(`child process close all stdio with code ${code}`);
-        // send data to browser
-        res.send(dataToSend)
-    });
+    // // in close event we are sure that stream from child process is closed
+    // python.on('close', (code) => {
+    //     console.log(`child process close all stdio with code ${code}`);
+    //     // send data to browser
+    //     res.send(dataToSend)
+    // });
     
 });
 
