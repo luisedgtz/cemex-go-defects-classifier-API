@@ -15,6 +15,7 @@ const {spawn} = require('child_process')
 const Report = require("../model/report");
 
 const auth = require("../middleware/auth");
+const { response } = require("express");
 
 router.get("/all", async (req, res) => {
     try {
@@ -90,14 +91,41 @@ router.get("/byDate", async (req, res) => {
 
 router.post('/script', async (req, res) => {
     const { defects_array } = req.body
+
+     //Get current date when this function was called
+     const now = new Date();
+        
+     // Create unique report Id. (We can be sure that its unique because its specific to the user and second it was created)
+     //const reportId = `${createdBy}:${now.getTime()}`
+     const reportId = `${"ADMIN"}:${now.getTime()}`
+
+
     try {
         const response = await axios.post('http://127.0.0.1:5000/classify', {
             "defects_array": defects_array
         })
-        console.log(response.data.length)
+        //console.log(response.data.length)
+        //console.log(response.data[0][1])
+
+        const report = await Report.create({
+            reportId: reportId,
+            createdAt: now, 
+            createdBy: "DEV",
+            department: "ADMIN",
+            numGroups: response.data.length,
+            labels: [],
+            groups: response.data
+        });
+
+        res.status(201).json(report);
+
     } catch(error) {
         console.log(error)
     }
+
+
+
+    
     // let dataToSend;
 
     //console.log( req.body.defects_array)
