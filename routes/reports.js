@@ -90,7 +90,7 @@ router.get("/byDate", async (req, res) => {
 });
 
 router.post('/script', async (req, res) => {
-    const { defects_array } = req.body
+    const { defects_array, cluster_number } = req.body
 
      //Get current date when this function was called
      const now = new Date();
@@ -101,8 +101,10 @@ router.post('/script', async (req, res) => {
 
 
     try {
+        console.log("Received request to /script endpoint")
         const response = await axios.post('http://127.0.0.1:5000/classify', {
-            "defects_array": defects_array
+            "defects_array": defects_array,
+            "cluster_number": cluster_number
         })
         //console.log(response.data.length)
         //console.log(response.data[0][1])

@@ -26,12 +26,17 @@ def get_model_prediction(arr):
 
     return keyword_array
 
+def get_defects_description(arr):
+  str_arr = [element["description"] for element in arr]
+  return str_arr
+
 #Model execution route
 @app.route('/classify', methods = ['POST'])
 def classify():
     print("running model")
-    data = request.get_json()['defects_array']
-    clusters_number = 3
+    request_data = request.get_json()['defects_array']
+    data = get_defects_description(request_data)
+    clusters_number = request.get_json()['cluster_number']
     defects_keyword_array = get_model_prediction(data)
     vectorizer = TfidfVectorizer(stop_words="english", ngram_range = (1,3))
     X = vectorizer.fit_transform(defects_keyword_array)
@@ -40,7 +45,7 @@ def classify():
 
     groups_array = model.predict(X)
     res = [[] for x in range(clusters_number)]
-    for index, element in enumerate(data):
+    for index, element in enumerate(request_data):
         res[groups_array[index]].append(element)
 
     print(res)
