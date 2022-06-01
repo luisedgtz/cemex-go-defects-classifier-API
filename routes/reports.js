@@ -33,30 +33,34 @@ router.get("/all", async (req, res) => {
 router.post("/new", async (req, res) => {
     try {
         // Get report input
-        const { fileLink, createdBy, department, numGroups, labels} = req.body;
+        //const { fileLink, createdBy, department, numGroups, labels, groups} = req.body;
+        const { department, numGroups, labels, groups} = req.body;  //de momento todavia no tomamos el createdBy ni el department
 
         //Get current date when this function was called
         const now = new Date();
-        
+            
         // Create unique report Id. (We can be sure that its unique because its specific to the user and second it was created)
-        const reportId = `${createdBy}:${now.getTime()}`
+        //const reportId = `${createdBy}:${now.getTime()}`
+        const reportId = `${"ADMIN"}:${now.getTime()}`
 
         // Validate user input
-        if (!(fileLink && createdBy && department && numGroups && labels)) {
+        if (!(department && numGroups && labels && groups)) {
             res.status(400).send("All input is required");
         }
 
         const report = await Report.create({
-            reportId, 
-            fileLink,
+            reportId: reportId,
             createdAt: now, 
-            createdBy,
-            department,
-            numGroups,
-            labels
+            createdBy: "DEV",
+            department: department,
+            numGroups: numGroups,
+            labels: labels,
+            groups: groups
         });
 
         res.status(201).json(report);
+        //res.status(201).json("Hola");
+
         
     } catch (e) {
         console.log(e)
@@ -92,13 +96,6 @@ router.get("/byDate", async (req, res) => {
 router.post('/script', async (req, res) => {
     const { defects_array, cluster_number } = req.body
 
-     //Get current date when this function was called
-     const now = new Date();
-        
-     // Create unique report Id. (We can be sure that its unique because its specific to the user and second it was created)
-     //const reportId = `${createdBy}:${now.getTime()}`
-     const reportId = `${"ADMIN"}:${now.getTime()}`
-
 
     try {
         console.log("Received request to /script endpoint")
@@ -109,23 +106,11 @@ router.post('/script', async (req, res) => {
         //console.log(response.data.length)
         //console.log(response.data[0][1])
 
-        const report = await Report.create({
-            reportId: reportId,
-            createdAt: now, 
-            createdBy: "DEV",
-            department: "ADMIN",
-            numGroups: response.data.length,
-            labels: [],
-            groups: response.data
-        });
-
-        res.status(201).json(report);
+        res.status(201).json(response.data);
 
     } catch(error) {
         console.log(error)
     }
-
-
 
     
     // let dataToSend;

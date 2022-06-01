@@ -7,7 +7,19 @@ const reportSchema = new mongoose.Schema({
     department: {type: String, default: null},
     numGroups: {type: Number, default: 0},
     labels: {type: [String], default: null},
-    groups: {type: [[String]], default: null}
+    groups: {type: [[{
+        Key : String,
+        Status : String,
+        Priority: String,
+        Severity : String,
+        Project : String,
+        Type: String,
+        Created: String,
+        Assignee: String,
+        Service: String,
+        Summary: String,
+        Description: String
+    }]], default: null}
 })
 
 module.exports = mongoose.model("report", reportSchema, 'Reports');
